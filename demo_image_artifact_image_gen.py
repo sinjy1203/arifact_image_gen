@@ -2,6 +2,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+from skimage.transform import rescale
+
 ## load image
 img = plt.imread("Lenna.png")
 
@@ -100,5 +102,47 @@ plt.title("Gaussian sampling mask")
 plt.subplot(133)
 plt.imshow(np.squeeze(dst), cmap=cmap, vmin=0, vmax=1)
 plt.title("sampling image")
+
+plt.show()
+
+## random noise
+sgm = 60.0
+
+noise = sgm / 255.0 * np.random.randn(img_size[0], img_size[1], img_size[2])
+
+dst = img + noise
+
+plt.subplot(131)
+plt.imshow(np.squeeze(img), cmap=cmap, vmin=0, vmax=1)
+plt.title("Ground Truth")
+
+plt.subplot(132)
+plt.imshow(np.squeeze(noise), cmap=cmap, vmin=0, vmax=1)
+plt.title("Noise")
+
+plt.subplot(133)
+plt.imshow(np.squeeze(dst), cmap=cmap, vmin=0, vmax=1)
+plt.title("Noisy image")
+
+plt.show()
+
+## super resolution
+dw = 1 / 5.0
+order = 1
+
+dst_dw = rescale(img, scale=(dw, dw, 1), order=order)
+dst_up = rescale(dst_dw, scale=(1/dw, 1/dw, 1), order=order)
+
+plt.subplot(131)
+plt.imshow(np.squeeze(img), cmap=cmap, vmin=0, vmax=1)
+plt.title("Ground Truth")
+
+plt.subplot(132)
+plt.imshow(np.squeeze(dst_dw), cmap=cmap, vmin=0, vmax=1)
+plt.title("downscaled image")
+
+plt.subplot(133)
+plt.imshow(np.squeeze(dst_up), cmap=cmap, vmin=0, vmax=1)
+plt.title("upscaled image")
 
 plt.show()
